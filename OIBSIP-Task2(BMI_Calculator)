@@ -1,0 +1,61 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QTextEdit
+
+def BMI(weight, height):
+    return weight / ((height / 100) ** 2)
+
+def category_bmi(bmi):
+    if bmi < 18.5:
+        return "Oops! You are underweight"
+    elif 18.5 <= bmi < 25:
+        return "Awesome! You are healthy."
+    elif 25 <= bmi < 30:
+        return "Eee! You are overweight."
+    else:
+        return "Seesh! You are obese."
+
+class BMIWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        layout = QVBoxLayout()
+
+        self.height_label = QLabel("Enter your height in cm:")
+        self.height_input = QLineEdit()
+        layout.addWidget(self.height_label)
+        layout.addWidget(self.height_input)
+
+        self.weight_label = QLabel("Enter your weight in kg:")
+        self.weight_input = QLineEdit()
+        layout.addWidget(self.weight_label)
+        layout.addWidget(self.weight_input)
+
+        self.calculate_button = QPushButton("Calculate BMI")
+        self.calculate_button.clicked.connect(self.calculate_bmi)
+        layout.addWidget(self.calculate_button)
+
+        self.result_label = QLabel()
+        self.result_label.setStyleSheet("font-size: 16pt;")  # Increase font size
+        layout.addWidget(self.result_label)
+
+        self.setLayout(layout)
+        self.setWindowTitle("BMI Calculator")
+
+    def calculate_bmi(self):
+        height = float(self.height_input.text())
+        weight = float(self.weight_input.text())
+
+        bmi = BMI(weight, height)
+        category = category_bmi(bmi)
+
+        self.result_label.setText(f"Your BMI is: {round(bmi, 2)}\n{category}")
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    widget = BMIWidget()
+    widget.show()
+    sys.exit(app.exec_())
